@@ -1,19 +1,21 @@
 import pandas as pd
 
 
-##Step 1: Read CSV File
+# Read CSV File
 
 df = pd.read_csv('movie_dataset.csv')
 print (df.columns)
 
-##Step 2: Select Features
+
+# Select Features
 
 selected_features = ['keywords', 'cast', 'genres', 'director']
 
 for f in selected_features:
   df[f] = df[f].fillna("")
 
-##Step 3: Create a column in DF which combines all selected features
+
+# Create a column in DF which combines all selected features
 
 def combine_features(row):
   try:
@@ -24,6 +26,7 @@ def combine_features(row):
 df['combined_to_use'] = df.apply(combine_features, axis = 1)
 #df
 print ("Combiner Features", df['combined_to_use'].head())
+
 
 ##Step 4: Create count matrix from this new combined column
 
@@ -39,6 +42,7 @@ count_matrix = cv.fit_transform(df['combined_to_use'])
 cosine_sim = cosine_similarity(count_matrix) 
 movie_that_user_likes = 'Troy'
 
+
 ## Step 6: Get index of this movie from its title
 
 ###### Helper functions #######
@@ -47,9 +51,9 @@ def get_title_from_index(index):
 
 def get_index_from_title(title):
    return df[df.title == title]["index"].values[0]
+######################################################
 
 movie_index = get_index_from_title(movie_that_user_likes) 
-
 similar_movies = list(enumerate(cosine_sim[movie_index]))
 
 
@@ -57,6 +61,7 @@ similar_movies = list(enumerate(cosine_sim[movie_index]))
 
 sorted_similar_movies = sorted(similar_movies,key=lambda x:x[1], reverse=True)
 #sorted_similar_movies
+
 
 ## Step 8: Print titles of first 50 movies
 
